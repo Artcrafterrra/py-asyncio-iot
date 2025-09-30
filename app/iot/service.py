@@ -1,3 +1,4 @@
+import asyncio
 import random
 import string
 from typing import Protocol
@@ -33,10 +34,14 @@ class IOTService:
         return device_id
 
     async def unregister_device(self, device_id: str) -> None:
+        if device_id not in self.devices:
+            raise ValueError(f"Device with ID {device_id} not found")
         await self.devices[device_id].disconnect()
         del self.devices[device_id]
 
     def get_device(self, device_id: str) -> Device:
+        if device_id not in self.devices:
+            raise ValueError(f"Device with ID {device_id} not found")
         return self.devices[device_id]
 
     async def run_program(self, program: list[Message]) -> None:
@@ -46,4 +51,6 @@ class IOTService:
         print("=====END OF PROGRAM======")
 
     async def send_msg(self, msg: Message) -> None:
+        if msg.device_id not in self.devices:
+            raise ValueError(f"Device with ID {msg.device_id} not found")
         await self.devices[msg.device_id].send_message(msg.msg_type, msg.data)
