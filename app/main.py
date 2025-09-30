@@ -6,6 +6,7 @@ from iot.devices import HueLightDevice, SmartSpeakerDevice, SmartToiletDevice
 from iot.message import Message, MessageType
 from iot.service import IOTService
 
+
 async def run_sequence(*functions: Awaitable[Any]) -> None:
     for function in functions:
         await function
@@ -38,22 +39,20 @@ async def main() -> None:
             Message(
                 speaker_id,
                 MessageType.PLAY_SONG,
-                "Rick Astley - Never Gonna Give You Up"
+                "Rick Astley - Never Gonna Give You Up",
             )
-        )
+        ),
     )
 
     await run_sequence(
         run_paeallel(
-            service.send_msg(
-                Message(hue_light_id, MessageType.SWITCH_OFF)
-            ),
+            service.send_msg(Message(hue_light_id, MessageType.SWITCH_OFF)),
             service.send_msg(Message(speaker_id, MessageType.SWITCH_OFF)),
         ),
         run_sequence(
             service.send_msg(Message(toilet_id, MessageType.FLUSH)),
             service.send_msg(Message(toilet_id, MessageType.CLEAN)),
-        )
+        ),
     )
 
 
