@@ -11,7 +11,7 @@ async def run_sequence(*functions: Awaitable[Any]) -> None:
         await function
 
 
-async def run_paeallel(*functions: Awaitable[Any]) -> None:
+async def run_parallel(*functions: Awaitable[Any]) -> None:
     await asyncio.gather(*functions)
 
 
@@ -30,7 +30,7 @@ async def main() -> None:
     )
 
     await run_sequence(
-        run_paeallel(
+        run_parallel(
             service.send_msg(Message(hue_light_id, MessageType.SWITCH_ON)),
             service.send_msg(Message(speaker_id, MessageType.SWITCH_ON)),
         ),
@@ -44,7 +44,7 @@ async def main() -> None:
     )
 
     await run_sequence(
-        run_paeallel(
+        run_parallel(
             service.send_msg(
                 Message(hue_light_id, MessageType.SWITCH_OFF)
             ),
